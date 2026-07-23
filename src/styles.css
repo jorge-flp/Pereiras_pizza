@@ -1,0 +1,129 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ember: var(--ember);
+  --color-ember-foreground: var(--ember-foreground);
+
+  --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #ea580c 100%);
+  --gradient-ember: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+  --shadow-gold: 0 20px 60px -20px color-mix(in oklab, #f59e0b 55%, transparent);
+  --shadow-ember: 0 20px 50px -20px color-mix(in oklab, #dc2626 60%, transparent);
+}
+
+:root {
+  --radius: 0.75rem;
+
+  --background: oklch(0.16 0.01 60);
+  --foreground: oklch(0.97 0.01 90);
+
+  --card: oklch(0.19 0.012 60);
+  --card-foreground: oklch(0.97 0.01 90);
+
+  --muted: oklch(0.24 0.012 60);
+  --muted-foreground: oklch(0.72 0.02 80);
+
+  --border: oklch(0.28 0.015 65);
+  --ring: oklch(0.78 0.16 75);
+
+  --primary: oklch(0.82 0.17 78);
+  --primary-foreground: oklch(0.18 0.02 60);
+
+  --accent: oklch(0.68 0.19 45);
+  --accent-foreground: oklch(0.98 0.01 90);
+
+  --ember: oklch(0.62 0.22 30);
+  --ember-foreground: oklch(0.98 0.01 90);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  [id] {
+  scroll-margin-top: 5rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(circle at 15% 10%, color-mix(in oklab, #f59e0b 8%, transparent), transparent 55%),
+      radial-gradient(circle at 85% 90%, color-mix(in oklab, #dc2626 6%, transparent), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility gold-text {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility btn-gold {
+  background: var(--gradient-gold);
+  color: #1a1305;
+  font-weight: 700;
+  box-shadow: var(--shadow-gold);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+}
+
+@utility btn-ember {
+  background: var(--gradient-ember);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: var(--shadow-ember);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+}
+
+@utility card-surface {
+  background: linear-gradient(160deg, color-mix(in oklab, var(--card) 92%, transparent), color-mix(in oklab, var(--background) 90%, transparent));
+  border: 1px solid var(--border);
+  backdrop-filter: blur(6px);
+}
