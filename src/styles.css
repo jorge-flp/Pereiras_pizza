@@ -1,6 +1,3 @@
-/* 1. Importa a fonte Roboto do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
@@ -8,11 +5,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  /* Configuração de Fontes */
-  --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  /* Bordas */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -20,7 +15,6 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
 
-  /* Cores */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -37,25 +31,10 @@
   --color-ember: var(--ember);
   --color-ember-foreground: var(--ember-foreground);
 
-  /* Efeitos e Gradientes */
   --gradient-gold: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #ea580c 100%);
   --gradient-ember: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
   --shadow-gold: 0 20px 60px -20px color-mix(in oklab, #f59e0b 55%, transparent);
   --shadow-ember: 0 20px 50px -20px color-mix(in oklab, #dc2626 60%, transparent);
-
-  /* Animação Suave (1.2s) */
-  --animate-fade-in: fadeIn 1.2s ease-out forwards;
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(6px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
 }
 
 :root {
@@ -71,25 +50,21 @@
   --muted-foreground: oklch(0.72 0.02 80);
 
   --border: oklch(0.28 0.015 65);
-  --ring: oklch(41.042% 0.08693 74.059);
+  --ring: oklch(0.78 0.16 75);
 
-  --primary: oklch(56.311% 0.1159 79.531);
+  --primary: oklch(0.82 0.17 78);
   --primary-foreground: oklch(0.18 0.02 60);
 
-  --accent: oklch(41.042% 0.08693 74.059);
+  --accent: oklch(0.68 0.19 45);
   --accent-foreground: oklch(0.98 0.01 90);
 
-  --ember: oklch(31.094% 0.11626 30.818);
+  --ember: oklch(0.62 0.22 30);
   --ember-foreground: oklch(0.98 0.01 90);
 }
 
 @layer base {
   * {
     border-color: var(--color-border);
-  }
-
-  [id] {
-    scroll-margin-top: 5rem;
   }
 
   html {
@@ -136,6 +111,19 @@
   color: #fff;
   font-weight: 700;
   box-shadow: var(--shadow-ember);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+  }
+}
+
+/* Novo: botão do iFood, seguindo o mesmo padrão de btn-gold/btn-ember */
+@utility btn-ifood {
+  background: #ea1d2c;
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 20px 50px -20px color-mix(in oklab, #ea1d2c 55%, transparent);
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
   &:hover {
     transform: translateY(-2px);

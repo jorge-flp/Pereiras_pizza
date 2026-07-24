@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState, type ReactNode } from "react";
 import {
   Pizza,
   Bike,
@@ -11,14 +11,19 @@ import {
   Phone,
   Instagram,
   MessageCircle,
+  ShoppingBag,
   Menu as MenuIcon,
   X,
 } from "lucide-react";
-import logoImg from "@/assets/pereiras-logo.png";
+import logoAsset from "@/assets/pereiras_logo.asset.json";
 import heroPizza from "@/assets/hero-pizza.jpg";
-import pizzaFrango from "@/assets/pizza-frango.jpg";
+import pizzaFrango from "@/assets/pizza-frango-cream-cheese.jpg";
 import pizzaCalabresa from "@/assets/pizza-calabresa.jpg";
+import pizzaMarguerita from "@/assets/pizza-marguerita.jpg";
 import pizzaChocolate from "@/assets/pizza-chocolate.jpg";
+import pizzaFritaCalabresa from "@/assets/pizza-frita-calabresa.jpg";
+// Duas fotos enviadas pelo cliente (sanduíche e pizza de camarão) não têm
+// item correspondente no cardápio atual e não foram usadas.
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -26,67 +31,76 @@ export const Route = createFileRoute("/")({
 
 const ORDER_URL = "https://instadelivery.com.br/PereirasPizzaslagodojacarey";
 const WHATSAPP_URL = "https://wa.me/5585999154598";
-const INSTAGRAM_URL = "https://www.instagram.com/pereiraspizzaoficial/";
+const INSTAGRAM_URL = "https://instagram.com/pereiraspizzaoficial";
+const IFOOD_URL =
+  "https://www.ifood.com.br/delivery/eusebio-ce/pereiras-pizzas-ecofit---eusebio-coacu/f2d4c8e3-7a22-474a-89b5-d8f0e44cccaf?utm_medium=share";
+
+// Botão reutilizável do iFood — evita duplicar markup nas 3 seções onde aparece.
+// OBS: lucide-react não tem o ícone oficial da marca iFood; usei ShoppingBag
+// como aproximação. Para o logo real, precisa de um SVG customizado.
+function IfoodButton({ className = "", full = false }: { className?: string; full?: boolean }) {
+  return (
+    <a
+      href={IFOOD_URL}
+      target="_blank"
+      rel="noreferrer noopener"
+      className={
+        "btn-ifood inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base " +
+        (full ? "w-full sm:w-auto " : "") +
+        className
+      }
+    >
+      <ShoppingBag className="h-5 w-5" /> Peça agora pelo iFood
+    </a>
+  );
+}
 
 type Category = "salgadas" | "doces" | "fritas" | "bebidas";
+
+// Preço fixo de R$ 62 aplicado a todas as pizzas (salgadas, doces e fritas)
+// por solicitação do cliente. Bebidas mantidas fora dessa regra.
+const PIZZA_PRICE = "R$ 62";
 
 const menu: Record<Category, Array<{ name: string; desc: string; price: string; img?: string; tag?: string }>> = {
   salgadas: [
     {
       name: "Frango com Cream Cheese",
       desc: "Frango desfiado suculento com cream cheese cremoso sobre nossa massa artesanal.",
-      price: "R$ 54",
+      price: PIZZA_PRICE,
       img: pizzaFrango,
       tag: "Mais pedida",
     },
     {
       name: "Calabresa Especial",
       desc: "Calabresa fatiada, cebola roxa, azeitonas pretas e orégano fresco.",
-      price: "R$ 49",
+      price: PIZZA_PRICE,
       img: pizzaCalabresa,
     },
     {
       name: "Marguerita da Casa",
       desc: "Molho de tomate rústico, mussarela, tomate fresco e manjericão.",
-      price: "R$ 46",
-    },
-    {
-      name: "Portuguesa Pereira's",
-      desc: "Presunto, ovo, cebola, pimentão, azeitona e nosso queijo especial.",
-      price: "R$ 52",
+      price: PIZZA_PRICE,
+      img: pizzaMarguerita,
     },
   ],
   doces: [
     {
       name: "Chocolate Cremoso",
       desc: "Massa crocante coberta com chocolate ao leite cremoso e gotas brancas.",
-      price: "R$ 42",
+      price: PIZZA_PRICE,
       img: pizzaChocolate,
       tag: "Favorita",
-    },
-    {
-      name: "Romeu e Julieta",
-      desc: "Goiabada derretida com queijo minas artesanal.",
-      price: "R$ 38",
-    },
-    {
-      name: "Prestígio",
-      desc: "Chocolate meio amargo com coco fresco ralado.",
-      price: "R$ 44",
     },
   ],
   fritas: [
     {
       name: "Pizza Frita Calabresa",
       desc: "Massa frita crocante, molho especial e calabresa artesanal.",
-      price: "R$ 32",
-    },
-    {
-      name: "Pizza Frita Quatro Queijos",
-      desc: "Mussarela, provolone, parmesão e catupiry na massa frita dourada.",
-      price: "R$ 36",
+      price: PIZZA_PRICE,
+      img: pizzaFritaCalabresa,
     },
   ],
+  // Bebidas ficam fora da regra de preço fixo das pizzas — não são pizza.
   bebidas: [
     { name: "Coca-Cola 2L", desc: "Gelada, acompanha qualquer combo.", price: "R$ 14" },
     { name: "Guaraná Antarctica 2L", desc: "O clássico brasileiro geladinho.", price: "R$ 13" },
@@ -127,33 +141,22 @@ const testimonials = [
 function LandingPage() {
   const [activeCat, setActiveCat] = useState<Category>("salgadas");
   const [navOpen, setNavOpen] = useState(false);
-  const [animando, setAnimando] = useState(false);
-
-  const trocarCategoria = (novaCategoria: Category) => {
-    if (novaCategoria === activeCat) return;
-    setAnimando(true);
-    setActiveCat(novaCategoria);
-
-    setTimeout(() => {
-      setAnimando(false);
-    }, 1200);
-  };
 
   const navLinks = [
     { href: "#inicio", label: "Início" },
-    { href: "/sobre", label: "Sobre Nós" },
     { href: "#sabores", label: "Sabores" },
     { href: "#diferenciais", label: "Diferenciais" },
+    { href: "#avaliacoes", label: "Avaliações" },
     { href: "#endereco", label: "Endereço" },
   ];
 
   return (
-    <div className="min-h-screen animate-fade-in font-sans">
+    <div className="min-h-screen">
       <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:py-4">
           <a href="#inicio" className="flex min-w-0 items-center gap-3">
             <img
-              src={logoImg}
+              src={logoAsset.url}
               alt="Pereira's Pizzas"
               width={44}
               height={44}
@@ -169,27 +172,16 @@ function LandingPage() {
             </div>
           </a>
 
-          {/* Navegação Desktop */}
           <nav className="hidden items-center gap-7 md:flex">
-            {navLinks.map((l) =>
-              l.href.startsWith("/") ? (
-                <Link
-                  key={l.href}
-                  to={l.href}
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {l.label}
-                </Link>
-              ) : (
-                <a
-                  key={l.href}
-                  href={l.href}
-                  className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {l.label}
-                </a>
-              )
-            )}
+            {navLinks.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              >
+                {l.label}
+              </a>
+            ))}
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
@@ -197,7 +189,7 @@ function LandingPage() {
               href={ORDER_URL}
               target="_blank"
               rel="noreferrer noopener"
-              className="btn-gold hidden rounded-full px-5 py-2.5 text-sm md:inline-flex active:scale-95 transition-transform"
+              className="btn-gold hidden rounded-full px-5 py-2.5 text-sm md:inline-flex"
             >
               Pedir Agora
             </a>
@@ -205,43 +197,31 @@ function LandingPage() {
               type="button"
               onClick={() => setNavOpen((v) => !v)}
               aria-label="Menu"
-              className="grid h-10 w-10 place-items-center rounded-full border border-border md:hidden active:scale-95 transition-transform"
+              className="grid h-10 w-10 place-items-center rounded-full border border-border md:hidden"
             >
               {navOpen ? <X className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
             </button>
           </div>
         </div>
 
-        {/* Navegação Mobile */}
         {navOpen && (
-          <div className="border-t border-border/60 bg-background/95 md:hidden animate-fade-in">
+          <div className="border-t border-border/60 bg-background/95 md:hidden">
             <div className="mx-auto flex max-w-6xl flex-col gap-1 px-4 py-3">
-              {navLinks.map((l) =>
-                l.href.startsWith("/") ? (
-                  <Link
-                    key={l.href}
-                    to={l.href}
-                    onClick={() => setNavOpen(false)}
-                    className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-                  >
-                    {l.label}
-                  </Link>
-                ) : (
-                  <a
-                    key={l.href}
-                    href={l.href}
-                    onClick={() => setNavOpen(false)}
-                    className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-                  >
-                    {l.label}
-                  </a>
-                )
-              )}
+              {navLinks.map((l) => (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setNavOpen(false)}
+                  className="rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
+                >
+                  {l.label}
+                </a>
+              ))}
               <a
                 href={ORDER_URL}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="btn-gold mt-2 rounded-full px-5 py-3 text-center text-sm active:scale-95 transition-transform"
+                className="btn-gold mt-2 rounded-full px-5 py-3 text-center text-sm"
               >
                 Pedir Agora
               </a>
@@ -281,7 +261,7 @@ function LandingPage() {
                 href={ORDER_URL}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="btn-gold inline-flex items-center justify-center rounded-full px-7 py-4 text-base active:scale-95 transition-transform"
+                className="btn-gold inline-flex items-center justify-center rounded-full px-7 py-4 text-base"
               >
                 Ver Cardápio & Pedir Online
               </a>
@@ -289,10 +269,11 @@ function LandingPage() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="btn-ember inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base active:scale-95 transition-transform"
+                className="btn-ember inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base"
               >
                 <MessageCircle className="h-5 w-5" /> Falar no WhatsApp
               </a>
+              <IfoodButton />
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground md:justify-start">
@@ -309,7 +290,7 @@ function LandingPage() {
               alt="Pizza artesanal Pereira's"
               width={1280}
               height={1280}
-              className="h-full w-full rounded-3xl object-cover ring-2 ring-primary/60 shadow-2xl"
+              className="relative aspect-square w-full rounded-full object-cover shadow-2xl ring-1 ring-primary/20"
             />
           </div>
         </div>
@@ -362,9 +343,9 @@ function LandingPage() {
               return (
                 <button
                   key={c.key}
-                  onClick={() => trocarCategoria(c.key)}
+                  onClick={() => setActiveCat(c.key)}
                   className={
-                    "rounded-full px-4 py-2 text-sm font-semibold transition-all active:scale-95 md:px-5 md:py-2.5 " +
+                    "rounded-full px-4 py-2 text-sm font-semibold transition-all md:px-5 md:py-2.5 " +
                     (active
                       ? "btn-gold"
                       : "border border-border bg-muted/40 text-muted-foreground hover:text-foreground")
@@ -376,59 +357,57 @@ function LandingPage() {
             })}
           </div>
 
-          <div className={animando ? "" : "animate-fade-in"}>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {menu[activeCat].map((item) => (
-                <article
-                  key={item.name}
-                  className="card-surface group flex flex-col overflow-hidden rounded-2xl transition-transform hover:-translate-y-1"
-                >
-                  {item.img ? (
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <img
-                        src={item.img}
-                        alt={item.name}
-                        width={800}
-                        height={600}
-                        loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      {item.tag && (
-                        <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
-                          {item.tag}
-                        </span>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-gradient-to-br from-muted/40 to-background">
-                      <Pizza className="h-16 w-16 text-primary/50" />
-                      {item.tag && (
-                        <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
-                          {item.tag}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  <div className="flex flex-1 flex-col p-5">
-                    <div className="flex items-start justify-between gap-3">
-                      <h3 className="font-display text-lg font-bold">{item.name}</h3>
-                      <span className="shrink-0 rounded-lg bg-primary/15 px-2.5 py-1 text-sm font-bold text-primary">
-                        {item.price}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {menu[activeCat].map((item) => (
+              <article
+                key={item.name}
+                className="card-surface group flex flex-col overflow-hidden rounded-2xl transition-transform hover:-translate-y-1"
+              >
+                {item.img ? (
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      width={800}
+                      height={600}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                    {item.tag && (
+                      <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
+                        {item.tag}
                       </span>
-                    </div>
-                    <p className="mt-2 flex-1 text-sm text-muted-foreground">{item.desc}</p>
-                    <a
-                      href={ORDER_URL}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="btn-gold mt-5 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm active:scale-95 transition-transform"
-                    >
-                      Pedir
-                    </a>
+                    )}
                   </div>
-                </article>
-              ))}
-            </div>
+                ) : (
+                  <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-gradient-to-br from-muted/40 to-background">
+                    <Pizza className="h-16 w-16 text-primary/50" />
+                    {item.tag && (
+                      <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
+                        {item.tag}
+                      </span>
+                    )}
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="font-display text-lg font-bold">{item.name}</h3>
+                    <span className="shrink-0 rounded-lg bg-primary/15 px-2.5 py-1 text-sm font-bold text-primary">
+                      {item.price}
+                    </span>
+                  </div>
+                  <p className="mt-2 flex-1 text-sm text-muted-foreground">{item.desc}</p>
+                  <a
+                    href={ORDER_URL}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="btn-gold mt-5 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm"
+                  >
+                    Pedir
+                  </a>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -508,9 +487,13 @@ function LandingPage() {
                 <h3 className="font-display text-xl font-bold">Unidade Eusébio</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                R. Alameda Verde<br />
+                Alameda Verde, loja 4<br />
                 Eusébio — CE
               </p>
+              <p className="mt-1 text-xs font-semibold text-primary">
+                Vizinho ao Atacadão Eusébio
+              </p>
+              {/* TODO: Atualizar telefone oficial do cliente (unidade Eusébio) */}
               <a
                 href="tel:+5585997897279"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
@@ -537,10 +520,10 @@ function LandingPage() {
                 <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-ember/20 text-ember">
                   <Pizza className="h-5 w-5" />
                 </div>
-                <h3 className="font-display text-xl font-bold">Faixa de preço</h3>
+                <h3 className="font-display text-xl font-bold">Preço das pizzas</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                <span className="text-foreground">R$ 20 – R$ 80</span> por pessoa
+                <span className="text-foreground">R$ 62</span> por pizza
               </p>
             </div>
           </div>
@@ -550,7 +533,7 @@ function LandingPage() {
               href={ORDER_URL}
               target="_blank"
               rel="noreferrer noopener"
-              className="btn-gold inline-flex items-center justify-center rounded-full px-7 py-4 text-base active:scale-95 transition-transform"
+              className="btn-gold inline-flex items-center justify-center rounded-full px-7 py-4 text-base"
             >
               Pedir no InstaDelivery
             </a>
@@ -558,10 +541,11 @@ function LandingPage() {
               href={WHATSAPP_URL}
               target="_blank"
               rel="noreferrer noopener"
-              className="btn-ember inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base active:scale-95 transition-transform"
+              className="btn-ember inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base"
             >
               <MessageCircle className="h-5 w-5" /> WhatsApp
             </a>
+            <IfoodButton />
           </div>
         </div>
       </section>
@@ -570,7 +554,7 @@ function LandingPage() {
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex flex-col items-center gap-6 text-center">
             <img
-              src={logoImg}
+              src={logoAsset.url}
               alt="Pereira's Pizzas"
               width={72}
               height={72}
@@ -588,7 +572,7 @@ function LandingPage() {
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm font-semibold transition-colors hover:text-primary active:scale-95 transition-transform"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm font-semibold transition-colors hover:text-primary"
               >
                 <Instagram className="h-4 w-4" /> @pereiraspizzaoficial
               </a>
@@ -596,7 +580,7 @@ function LandingPage() {
                 href={ORDER_URL}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm font-semibold transition-colors hover:text-primary active:scale-95 transition-transform"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm font-semibold transition-colors hover:text-primary"
               >
                 <Pizza className="h-4 w-4" /> InstaDelivery
               </a>
@@ -604,10 +588,11 @@ function LandingPage() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm font-semibold transition-colors hover:text-primary active:scale-95 transition-transform"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm font-semibold transition-colors hover:text-primary"
               >
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
+              <IfoodButton className="!rounded-full !px-4 !py-2 text-sm" />
             </div>
 
             <p className="max-w-md text-sm text-muted-foreground">
