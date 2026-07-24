@@ -22,6 +22,10 @@ import pizzaCalabresa from "@/assets/pizza-calabresa.jpg";
 import pizzaMarguerita from "@/assets/pizza-marguerita.jpg";
 import pizzaChocolate from "@/assets/pizza-chocolate.jpg";
 import pizzaFritaCalabresa from "@/assets/pizza-frita-calabresa.jpg";
+import bebidaCocaCola from "@/assets/bebida-coca-cola.webp";
+import bebidaAguaMineral from "@/assets/bebida-agua-mineral.webp";
+import bebidaAguaSemGas from "@/assets/bebida-agua-sem-gas.webp";
+import bebidaGuarana from "@/assets/bebida-guarana.webp";
 // Duas fotos enviadas pelo cliente (sanduíche e pizza de camarão) não têm
 // item correspondente no cardápio atual e não foram usadas.
 
@@ -102,10 +106,10 @@ const menu: Record<Category, Array<{ name: string; desc: string; price: string; 
   ],
   // Bebidas ficam fora da regra de preço fixo das pizzas — não são pizza.
   bebidas: [
-    { name: "Coca-Cola 2L", desc: "Gelada, acompanha qualquer combo.", price: "R$ 14" },
-    { name: "Guaraná Antarctica 2L", desc: "O clássico brasileiro geladinho.", price: "R$ 13" },
-    { name: "Suco Natural 500ml", desc: "Laranja, maracujá ou abacaxi com hortelã.", price: "R$ 10" },
-    { name: "Água Mineral 500ml", desc: "Com ou sem gás.", price: "R$ 5" },
+    { name: "Coca-Cola 2L", desc: "Gelada, acompanha qualquer combo.", price: "R$ 14", img: bebidaCocaCola },
+    { name: "Guaraná Antarctica 2L", desc: "O clássico brasileiro geladinho.", price: "R$ 13", img: bebidaGuarana },
+    { name: "Água com Gás 500ml", desc: "Água mineral natural gaseificada.", price: "R$ 5", img: bebidaAguaMineral },
+    { name: "Água sem Gás 500ml", desc: "Água mineral natural.", price: "R$ 5", img: bebidaAguaSemGas },
   ],
 };
 
