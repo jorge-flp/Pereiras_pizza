@@ -14,7 +14,7 @@ import {
   Menu as MenuIcon,
   X,
 } from "lucide-react";
-import logoAsset from "@/assets/pereiras_logo.asset.json";
+import logoImg from "@/assets/pereiras-logo.png";
 import heroPizza from "@/assets/hero-pizza.jpg";
 import pizzaFrango from "@/assets/pizza-frango.jpg";
 import pizzaCalabresa from "@/assets/pizza-calabresa.jpg";
@@ -142,7 +142,7 @@ function LandingPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:py-4">
           <a href="#inicio" className="flex min-w-0 items-center gap-3">
             <img
-              src={logoAsset.url}
+              src={logoImg}
               alt="Pereira's Pizzas"
               width={44}
               height={44}
@@ -275,7 +275,7 @@ function LandingPage() {
               alt="Pizza artesanal Pereira's"
               width={1280}
               height={1280}
-              className="relative aspect-square w-full rounded-full object-cover shadow-2xl ring-1 ring-primary/20"
+              className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-primary/60"
             />
           </div>
         </div>
@@ -534,7 +534,7 @@ function LandingPage() {
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex flex-col items-center gap-6 text-center">
             <img
-              src={logoAsset.url}
+              src={logoImg}
               alt="Pereira's Pizzas"
               width={72}
               height={72}
