@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import {
   Pizza,
   Bike,
@@ -11,114 +11,85 @@ import {
   Phone,
   Instagram,
   MessageCircle,
-  ShoppingBag,
   Menu as MenuIcon,
   X,
 } from "lucide-react";
-import pereirasLogo from "@/assets/pereiras-logo.png";
-import heroPizza from "@/assets/hero-pizza.jpg";
-import pizzaFrango from "@/assets/pizza-frango-cream-cheese.jpg";
-import pizzaCalabresa from "@/assets/pizza-calabresa.jpg";
-import pizzaMarguerita from "@/assets/pizza-marguerita.jpg";
-import pizzaChocolate from "@/assets/pizza-chocolate.jpg";
-import pizzaFritaCalabresa from "@/assets/pizza-frita-calabresa.jpg";
-import bebidaCocaCola from "@/assets/bebida-coca-cola.webp";
-import bebidaAguaMineral from "@/assets/bebida-agua-mineral.webp";
-import bebidaAguaSemGas from "@/assets/bebida-agua-sem-gas.webp";
-import bebidaGuarana from "@/assets/bebida-guarana.webp";
-// Duas fotos enviadas pelo cliente (sanduíche e pizza de camarão) não têm
-// item correspondente no cardápio atual e não foram usadas.
+import logoImg from "@/assets/pereiras_logo.jpg";
+import heroPizza from "@/assets/pizzas/marguerita.jpg";
+import pizzaCalabresa from "@/assets/pizzas/calabresa.jpg";
+import pizzaMarguerita from "@/assets/pizzas/marguerita.jpg";
+import pizzaFrango from "@/assets/pizzas/frango.jpg";
+import pizzaPeperoni from "@/assets/pizzas/peperoni.jpg";
+import pizzaCamarao from "@/assets/pizzas/camarao.jpg";
+import pizzaChocolate from "@/assets/pizzas/chocolate.jpg";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-const ORDER_URL = "https://instadelivery.com.br/PereirasPizzaslagodojacarey";
-const WHATSAPP_URL = "https://wa.me/5585999154598";
+const WHATSAPP_URL = "https://wa.me/5585997897279";
 const INSTAGRAM_URL = "https://instagram.com/pereiraspizzaoficial";
-const IFOOD_URL =
-  "https://www.ifood.com.br/delivery/eusebio-ce/pereiras-pizzas-ecofit---eusebio-coacu/f2d4c8e3-7a22-474a-89b5-d8f0e44cccaf?utm_medium=share";
+const IFOOD_URL = "https://www.ifood.com.br/delivery/eusebio-ce/pereiras-pizzas-ecofit---eusebio-coacu/f2d4c8e3-7a22-474a-89b5-d8f0e44cccaf?utm_medium=share";
 
-// Botão reutilizável do iFood — evita duplicar markup nas 3 seções onde aparece.
-// OBS: lucide-react não tem o ícone oficial da marca iFood; usei ShoppingBag
-// como aproximação. Para o logo real, precisa de um SVG customizado.
-function IfoodButton({ className = "", full = false }: { className?: string; full?: boolean }) {
-  return (
-    <a
-      href={IFOOD_URL}
-      target="_blank"
-      rel="noreferrer noopener"
-      className={
-        "btn-ifood inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base " +
-        (full ? "w-full sm:w-auto " : "") +
-        className
-      }
-    >
-      <ShoppingBag className="h-5 w-5" /> Peça agora pelo iFood
-    </a>
-  );
-}
+type Category = "tradicionais" | "especiais" | "premium" | "doces" | "bordas";
 
-type Category = "salgadas" | "doces" | "fritas" | "bebidas";
-
-// Preço fixo de R$ 62 aplicado a todas as pizzas (salgadas, doces e fritas)
-// por solicitação do cliente. Bebidas mantidas fora dessa regra.
-const PIZZA_PRICE = "R$ 62";
-
-const menu: Record<Category, Array<{ name: string; desc: string; price: string; img?: string; tag?: string }>> = {
-  salgadas: [
+const menu: Record<Category, Array<{ name: string; desc: string; price: string; img: string; tag?: string }>> = {
+  tradicionais: [
     {
-      name: "Frango com Cream Cheese",
-      desc: "Frango desfiado suculento com cream cheese cremoso sobre nossa massa artesanal.",
-      price: PIZZA_PRICE,
+      name: "Calabresa",
+      desc: "Molho, mussarela, calabresa, cebola e orégano.",
+      price: "P R$ 28 · G R$ 42",
+      img: pizzaCalabresa,
+      tag: "Clássica",
+    },
+    {
+      name: "Marguerita",
+      desc: "Molho, mussarela, tomate, manjericão e orégano.",
+      price: "P R$ 28 · G R$ 42",
+      img: pizzaMarguerita,
+    },
+    {
+      name: "Frango com Requeijão",
+      desc: "Molho, frango desfiado, mussarela, milho, requeijão e orégano.",
+      price: "P R$ 28 · G R$ 42",
       img: pizzaFrango,
       tag: "Mais pedida",
     },
+  ],
+  especiais: [],
+  premium: [
     {
-      name: "Calabresa Especial",
-      desc: "Calabresa fatiada, cebola roxa, azeitonas pretas e orégano fresco.",
-      price: PIZZA_PRICE,
-      img: pizzaCalabresa,
+      name: "Peperoni",
+      desc: "Mussarela, peperoni e orégano.",
+      price: "P R$ 36 · G R$ 52",
+      img: pizzaPeperoni,
+      tag: "Top vendas",
     },
     {
-      name: "Marguerita da Casa",
-      desc: "Molho de tomate rústico, mussarela, tomate fresco e manjericão.",
-      price: PIZZA_PRICE,
-      img: pizzaMarguerita,
+      name: "Camarão Cream Chesse",
+      desc: "Molho, mussarela, camarão, cream cheese e orégano.",
+      price: "P R$ 40 · G R$ 62",
+      img: pizzaCamarao,
+      tag: "Premium",
     },
   ],
   doces: [
     {
-      name: "Chocolate Cremoso",
-      desc: "Massa crocante coberta com chocolate ao leite cremoso e gotas brancas.",
-      price: PIZZA_PRICE,
+      name: "Chocolate",
+      desc: "Massa artesanal coberta com chocolate ao leite cremoso.",
+      price: "P R$ 30 · G R$ 42",
       img: pizzaChocolate,
       tag: "Favorita",
     },
   ],
-  fritas: [
-    {
-      name: "Pizza Frita Calabresa",
-      desc: "Massa frita crocante, molho especial e calabresa artesanal.",
-      price: PIZZA_PRICE,
-      img: pizzaFritaCalabresa,
-    },
-  ],
-  // Bebidas ficam fora da regra de preço fixo das pizzas — não são pizza.
-  bebidas: [
-    { name: "Coca-Cola 2L", desc: "Gelada, acompanha qualquer combo.", price: "R$ 14", img: bebidaCocaCola },
-    { name: "Guaraná Antarctica 2L", desc: "O clássico brasileiro geladinho.", price: "R$ 13", img: bebidaGuarana },
-    { name: "Água com Gás 500ml", desc: "Água mineral natural gaseificada.", price: "R$ 5", img: bebidaAguaMineral },
-    { name: "Água sem Gás 500ml", desc: "Água mineral natural.", price: "R$ 5", img: bebidaAguaSemGas },
-  ],
+  bordas: [],
 };
 
 const categories: Array<{ key: Category; label: string }> = [
-  { key: "salgadas", label: "Pizzas Salgadas" },
-  { key: "doces", label: "Pizzas Doces" },
-  { key: "fritas", label: "Pizzas Fritas" },
-  { key: "bebidas", label: "Bebidas" },
-];
+  { key: "tradicionais", label: "Tradicionais" },
+  { key: "premium", label: "Premium" },
+  { key: "doces", label: "Doces" },
+].filter((c) => menu[c.key as Category].length > 0) as Array<{ key: Category; label: string }>;
 
 const differentials = [
   { icon: Pizza, title: "Massa Artesanal", desc: "Fermentação natural e molho especial da casa." },
@@ -143,7 +114,7 @@ const testimonials = [
 ];
 
 function LandingPage() {
-  const [activeCat, setActiveCat] = useState<Category>("salgadas");
+  const [activeCat, setActiveCat] = useState<Category>("tradicionais");
   const [navOpen, setNavOpen] = useState(false);
 
   const navLinks = [
@@ -160,7 +131,7 @@ function LandingPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:py-4">
           <a href="#inicio" className="flex min-w-0 items-center gap-3">
             <img
-              src={pereirasLogo}
+              src={logoImg}
               alt="Pereira's Pizzas"
               width={44}
               height={44}
@@ -171,8 +142,9 @@ function LandingPage() {
                 Pereira's Pizzas
               </div>
               <div className="text-[10px] uppercase tracking-widest text-muted-foreground sm:text-[11px]">
-                Lago Jacarey
+                Eusébio
               </div>
+
             </div>
           </a>
 
@@ -190,7 +162,7 @@ function LandingPage() {
 
           <div className="flex shrink-0 items-center gap-2">
             <a
-              href={ORDER_URL}
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noreferrer noopener"
               className="btn-gold hidden rounded-full px-5 py-2.5 text-sm md:inline-flex"
@@ -222,7 +194,7 @@ function LandingPage() {
                 </a>
               ))}
               <a
-                href={ORDER_URL}
+                href={WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="btn-gold mt-2 rounded-full px-5 py-3 text-center text-sm"
@@ -262,12 +234,12 @@ function LandingPage() {
 
             <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center md:justify-start">
               <a
-                href={ORDER_URL}
+                href={WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer noopener"
                 className="btn-gold inline-flex items-center justify-center rounded-full px-7 py-4 text-base"
               >
-                Ver Cardápio & Pedir Online
+                Pedir pelo WhatsApp
               </a>
               <a
                 href={WHATSAPP_URL}
@@ -277,7 +249,6 @@ function LandingPage() {
               >
                 <MessageCircle className="h-5 w-5" /> Falar no WhatsApp
               </a>
-              <IfoodButton />
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-4 text-xs text-muted-foreground md:justify-start">
@@ -367,32 +338,21 @@ function LandingPage() {
                 key={item.name}
                 className="card-surface group flex flex-col overflow-hidden rounded-2xl transition-transform hover:-translate-y-1"
               >
-                {item.img ? (
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={item.img}
-                      alt={item.name}
-                      width={800}
-                      height={600}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                    {item.tag && (
-                      <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
-                        {item.tag}
-                      </span>
-                    )}
-                  </div>
-                ) : (
-                  <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-gradient-to-br from-muted/40 to-background">
-                    <Pizza className="h-16 w-16 text-primary/50" />
-                    {item.tag && (
-                      <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
-                        {item.tag}
-                      </span>
-                    )}
-                  </div>
-                )}
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    src={item.img}
+                    alt={item.name}
+                    width={800}
+                    height={600}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  {item.tag && (
+                    <span className="absolute left-3 top-3 rounded-full bg-background/85 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-primary backdrop-blur">
+                      {item.tag}
+                    </span>
+                  )}
+                </div>
                 <div className="flex flex-1 flex-col p-5">
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="font-display text-lg font-bold">{item.name}</h3>
@@ -402,7 +362,7 @@ function LandingPage() {
                   </div>
                   <p className="mt-2 flex-1 text-sm text-muted-foreground">{item.desc}</p>
                   <a
-                    href={ORDER_URL}
+                    href={WHATSAPP_URL}
                     target="_blank"
                     rel="noreferrer noopener"
                     className="btn-gold mt-5 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm"
@@ -459,29 +419,12 @@ function LandingPage() {
               Onde nos encontrar
             </div>
             <h2 className="font-display text-3xl font-black md:text-4xl">
-              Visite uma de nossas <span className="gold-text">unidades</span>
+              Visite nossa <span className="gold-text">unidade</span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            <div className="card-surface rounded-2xl p-6 md:p-8">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-primary/15 text-primary">
-                  <MapPin className="h-5 w-5" />
-                </div>
-                <h3 className="font-display text-xl font-bold">Unidade Lago Jacarey</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Av. Viena Weyne, 380 — Lj 104<br />
-                Cambeba, Fortaleza — CE
-              </p>
-              <a
-                href="tel:+5585999154598"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
-              >
-                <Phone className="h-4 w-4" /> (85) 99915-4598
-              </a>
-            </div>
+
 
             <div className="card-surface rounded-2xl p-6 md:p-8">
               <div className="mb-4 flex items-center gap-3">
@@ -492,12 +435,9 @@ function LandingPage() {
               </div>
               <p className="text-sm text-muted-foreground">
                 Alameda Verde, loja 4<br />
-                Eusébio — CE
+                Eusébio — CE<br />
+                <span className="text-foreground">Vizinho ao Atacadão Eusébio</span>
               </p>
-              <p className="mt-1 text-xs font-semibold text-primary">
-                Vizinho ao Atacadão Eusébio
-              </p>
-              {/* TODO: Atualizar telefone oficial do cliente (unidade Eusébio) */}
               <a
                 href="tel:+5585997897279"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
@@ -524,23 +464,15 @@ function LandingPage() {
                 <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-ember/20 text-ember">
                   <Pizza className="h-5 w-5" />
                 </div>
-                <h3 className="font-display text-xl font-bold">Preço das pizzas</h3>
+                <h3 className="font-display text-xl font-bold">Faixa de preço</h3>
               </div>
               <p className="text-sm text-muted-foreground">
-                <span className="text-foreground">R$ 62</span> por pizza
+                <span className="text-foreground">R$ 20 – R$ 80</span> por pessoa
               </p>
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
-            <a
-              href={ORDER_URL}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="btn-gold inline-flex items-center justify-center rounded-full px-7 py-4 text-base"
-            >
-              Pedir no InstaDelivery
-            </a>
+          <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap">
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -549,7 +481,22 @@ function LandingPage() {
             >
               <MessageCircle className="h-5 w-5" /> WhatsApp
             </a>
-            <IfoodButton />
+            <a
+              href={IFOOD_URL}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#EA1D2C] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
+            >
+              <Bike className="h-5 w-5" /> Pedir no iFood
+            </a>
+            <a
+              href={INSTAGRAM_URL}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] via-40% to-[#bc1888] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
+            >
+              <Instagram className="h-5 w-5" /> Instagram
+            </a>
           </div>
         </div>
       </section>
@@ -558,7 +505,7 @@ function LandingPage() {
         <div className="mx-auto max-w-6xl px-4">
           <div className="flex flex-col items-center gap-6 text-center">
             <img
-              src={pereirasLogo}
+              src={logoImg}
               alt="Pereira's Pizzas"
               width={72}
               height={72}
@@ -567,7 +514,7 @@ function LandingPage() {
             <div>
               <div className="font-display text-xl font-black">Pereira's Pizzas</div>
               <div className="text-xs uppercase tracking-widest text-muted-foreground">
-                Lago Jacarey · Eusébio
+                Eusébio
               </div>
             </div>
 
@@ -581,14 +528,6 @@ function LandingPage() {
                 <Instagram className="h-4 w-4" /> @pereiraspizzaoficial
               </a>
               <a
-                href={ORDER_URL}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/40 px-4 py-2 text-sm font-semibold transition-colors hover:text-primary"
-              >
-                <Pizza className="h-4 w-4" /> InstaDelivery
-              </a>
-              <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer noopener"
@@ -596,12 +535,8 @@ function LandingPage() {
               >
                 <MessageCircle className="h-4 w-4" /> WhatsApp
               </a>
-              <IfoodButton className="!rounded-full !px-4 !py-2 text-sm" />
             </div>
 
-            <p className="max-w-md text-sm text-muted-foreground">
-              Obrigado por fazer parte da nossa história.
-            </p>
             <p className="text-xs text-muted-foreground">
               © {new Date().getFullYear()} Pereira's Pizzas · Todos os direitos reservados.
             </p>

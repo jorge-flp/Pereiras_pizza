@@ -77,16 +77,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Pereira's Pizzas Lago Jacarey — Pizza Artesanal em Fortaleza" },
+      { title: "Pereira's Pizzas Eusébio — Pizza Artesanal" },
       {
         name: "description",
         content:
-          "Pizza artesanal em Fortaleza e Eusébio. Massa crocante por fora, macia por dentro, ingredientes selecionados. Peça online ou pelo WhatsApp.",
+          "Pizza artesanal no Eusébio. Massa crocante por fora, macia por dentro, ingredientes selecionados. Peça pelo WhatsApp ou iFood.",
       },
       { property: "og:title", content: "Pereira's Pizzas — Felicidade em Forma de Pizza" },
       {
         property: "og:description",
-        content: "A verdadeira massa artesanal de Fortaleza e Eusébio. Peça online agora.",
+        content: "A verdadeira massa artesanal no Eusébio. Peça online agora.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

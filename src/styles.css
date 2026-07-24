@@ -118,19 +118,6 @@
   }
 }
 
-/* Novo: botão do iFood, seguindo o mesmo padrão de btn-gold/btn-ember */
-@utility btn-ifood {
-  background: #ea1d2c;
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 20px 50px -20px color-mix(in oklab, #ea1d2c 55%, transparent);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  &:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.08);
-  }
-}
-
 @utility card-surface {
   background: linear-gradient(160deg, color-mix(in oklab, var(--card) 92%, transparent), color-mix(in oklab, var(--background) 90%, transparent));
   border: 1px solid var(--border);
