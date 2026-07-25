@@ -11,6 +11,7 @@ import {
   Phone,
   Instagram,
   MessageCircle,
+  ShoppingBag,
   Menu as MenuIcon,
   X,
 } from "lucide-react";
@@ -30,6 +31,7 @@ export const Route = createFileRoute("/")({
 const WHATSAPP_URL = "https://wa.me/5585997897279";
 const INSTAGRAM_URL = "https://instagram.com/pereiraspizzaoficial";
 const IFOOD_URL = "https://www.ifood.com.br/delivery/eusebio-ce/pereiras-pizzas-ecofit---eusebio-coacu/f2d4c8e3-7a22-474a-89b5-d8f0e44cccaf?utm_medium=share";
+const INSTADELIVERY_URL = "https://instadelivery.com.br/pereiraspizzasecofit";
 
 type Category = "tradicionais" | "especiais" | "premium" | "doces" | "bordas";
 
@@ -234,12 +236,12 @@ function LandingPage() {
 
             <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center md:justify-start">
               <a
-                href={WHATSAPP_URL}
+                href={INSTADELIVERY_URL}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="btn-gold inline-flex items-center justify-center rounded-full px-7 py-4 text-base"
+                className="btn-gold inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-base"
               >
-                Pedir pelo WhatsApp
+                <ShoppingBag className="h-5 w-5" /> Pedir pelo InstaDelivery
               </a>
               <a
                 href={WHATSAPP_URL}
@@ -496,6 +498,14 @@ function LandingPage() {
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] via-40% to-[#bc1888] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
             >
               <Instagram className="h-5 w-5" /> Instagram
+            </a>
+            <a
+              href={INSTADELIVERY_URL}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[#FF4B2F] px-7 py-4 text-base font-bold text-white transition-transform hover:-translate-y-0.5"
+            >
+              <ShoppingBag className="h-5 w-5" /> InstaDelivery
             </a>
           </div>
         </div>
